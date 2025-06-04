@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prediction Result</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #00ffe0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      text-align: center;
+      padding: 30px;
+      border: 2px solid #ffb347;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #ffb347, #ff7e5f);
+      box-shadow: 0 0 25px #ffb347;
+      width: 90%;
+      max-width: 520px;
+    }
+
+    .box h2 {
+      text-shadow: 0 0 10px #000;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .box p {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .success-text {
+      color: #00ffcc;
+    }
+
+    .medium-text {
+      color: #ffff66;
+    }
+
+    .failure-text {
+      color: #ff4444;
+    }
+
+    .none-text {
+      color: #ffcccb;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 15px 20px;
+      border-radius: 10px;
+      border: 1px solid #00ffe0;
+      box-shadow: 0 0 15px #00ffe0;
+      z-index: 999;
+    }
+
+    .sidebar a {
+      color: #00ffe0;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .sidebar a:hover {
+      color: #00ffcc;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        top: auto;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-around;
+        width: 90%;
+        border-radius: 12px;
+        padding: 10px 15px;
+      }
+
+      .sidebar a {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 0.85em;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% if prediction is not none %}
+    <div class="box">
+      <h2>🔍 Prediction Result</h2>
+      <p><strong>Predicted Success Level:</strong> {{ prediction }}</p>
+      <p class="{% if prediction >= 3.5 %}success-text{% elif prediction >= 2.5 %}medium-text{% else %}failure-text{% endif %}">
+        {% if prediction >= 3.5 %}
+          ✅ This project is likely to succeed!
+        {% elif prediction >= 2.5 %}
+          ⚠ Moderate potential. Improve key areas.
+        {% else %}
+          ❌ This project is likely to struggle. Strong interventions recommended.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="sidebar">
+      <a href="/">🏠 Home</a>
+    </div>
+  {% else %}
+    <div class="box">
+      <h2 class="none-text">🔍 No Prediction Found</h2>
+      <p class="none-text">Redirecting to prediction form in 3 2 1.....</p>
+    </div>
+    <script>
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
+    </script>
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/artificial-intelligence.png">
+  <title>🧠 AI SPSP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: url('https://wallpapercave.com/wp/wp2782336.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: #00ffe0;
+      background-color: black;
+    }
+
+    body.fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    body.light-mode {
+      background: #111 !important;
+      color: #00ffe0;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #00ffe0;
+      z-index: 1000;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid #00ffe0;
+      box-shadow: 0 0 15px #00ffe0;
+      z-index: 999;
+    }
+
+    .sidebar a {
+      color: #00ffe0;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+
+    .sidebar a:hover {
+      color: #00ffcc;
+    }
+
+    .container {
+      max-width: 700px;
+      height: 80%;
+      margin: 40px auto;
+      background: rgba(0, 0, 0, 0.92);
+      border: 2px solid #00ffe0;
+      border-radius: 16px;
+      box-shadow: 0 0 25px #00ffe0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 0 10px #00ffe0;
+      padding: 20px;
+      border-bottom: 1px solid #00ffe0;
+    }
+
+    form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .form-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 30px;
+      scrollbar-width: thin;
+      scrollbar-color: #00ffe0 #000;
+    }
+
+    .form-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .form-body::-webkit-scrollbar-thumb {
+      background: #00ffe0;
+      border-radius: 4px;
+    }
+
+    .form-body::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    .form-footer {
+      padding: 20px 30px;
+      background: #000;
+      border-top: 1px solid #00ffe0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #00ffff;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border: 1px solid #00ffe0;
+      border-radius: 6px;
+      background-color: #000;
+      color: #00ffe0;
+      font-size: 1em;
+      box-shadow: inset 0 0 10px #00ffe0;
+    }
+
+    input[type="submit"] {
+      background: #00ffe0;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 0 20px #00ffe0;
+      transition: all 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background: #00ffcc;
+      box-shadow: 0 0 30px #00ffcc;
+    }
+
+    h4 {
+      color: #ffffff;
+      margin: 10px 0 5px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        height: 75%;
+        margin-top: 20px;
+        margin-bottom: 70px;
+        transform: scale(0.95);
+        transform-origin: top center;
+      }
+
+      .sidebar {
+        top: auto;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-around;
+        width: 85%;
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      .sidebar a {
+        margin: 0 8px;
+        font-size: 0.85em;
+      }
+
+      .form-body {
+        padding-bottom: 20px;
+      }
+
+      .form-footer {
+        padding: 12px;
+      }
+    }
+
+    /* Loader */
+    #loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      color: #00ffe0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    .dots::after {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #00ffe0;
+      margin-left: 10px;
+      animation: pulse 0.8s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 #00ffe0; }
+      50%  { box-shadow: 0 0 12px #00ffe0; }
+      100% { box-shadow: 0 0 0 #00ffe0; }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="theme-toggle" onclick="toggleTheme()">💡</div>
+
+  <div class="sidebar">
+    <a href="/">🏠 Home</a>
+    <a href="/result?status=none">🔮 Predict</a>
+  </div>
+
+  <div class="container">
+    <h2>🚀 Predict Software Development Success</h2>
+   <h4 style="text-align: center; color: #00ffe0; margin-bottom: 10px;">
+  Input the Likert Scales for Challenges & Factors
+</h4>
+    <form action="/predict" method="post">
+      <div class="form-body">
+
+        <h4>Demographics</h4>
+        <label>Age:</label>
+        <select name="age" required>
+          <option value="">Select...</option>
+          <option value="18-25">18–25</option>
+          <option value="26-35">26–35</option>
+          <option value="36-45">36–45</option>
+          <option value="46 and above">46 and above</option>
+        </select>
+
+        <label>Gender:</label>
+        <select name="gender" required>
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <label>Role:</label>
+        <select name="role" required>
+          <option value="">Select...</option>
+          <option value="Developer">Developer</option>
+          <option value="Manager">Manager</option>
+          <option value="Analyst">Analyst</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label>Experience Years:</label>
+        <select name="experience_years" required>
+          <option value="">Select...</option>
+          <option value="1-3">1–3</option>
+          <option value="4-6">4–6</option>
+          <option value="7+">7+</option>
+        </select>
+
+        <h4>Factors (1-5):</h4>
+        <label>Stakeholder Engagement (1-5):</label>
+        <input type="number" name="stakeholder_engagement" min="1" max="5" required>
+        <label>Developer Skills (1-5):</label>
+        <input type="number" name="dev_skills" min="1" max="5" required>
+        <label>Financial Investment (1-5):</label>
+        <input type="number" name="financial_investment" min="1" max="5" required>
+        <label>Risk Management (1-5):</label>
+        <input type="number" name="risk_management" min="1" max="5" required>
+        <label>Effective Communication (1-5):</label>
+        <input type="number" name="communication" min="1" max="5" required>
+        <label>Stakeholder Collaboration (1-5):</label>
+        <input type="number" name="collaboration" min="1" max="5" required>
+        <label>User Feedback Integration (1-5):</label>
+        <input type="number" name="user_feedback" min="1" max="5" required>
+
+
+        <h4>Challenges (1-5):</h4>
+        <label>Scalable Coding Challenge:</label>
+        <input type="number" name="challenge_scalability" min="1" max="5" required>
+        <label>Financial Challenge:</label>
+        <input type="number" name="challenge_funding" min="1" max="5" required>
+        <label>Integration Challenge:</label>
+        <input type="number" name="challenge_integration" min="1" max="5" required>
+        <label>Feedback Challenge:</label>
+        <input type="number" name="challenge_feedback" min="1" max="5" required>
+        <label>Team Dynamics Challenge:</label>
+        <input type="number" name="challenge_team" min="1" max="5" required>
+      </div>
+
+      <div class="form-footer">
+        <input type="submit" value="Predict Success">
+      </div>
+    </form>
+  </div>
+
+  <div id="loader-overlay">
+    <div class="dots"></div>
+    <p>🤖 Crunching Computations...</p>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+    }
+
+    window.onload = () => {
+      document.body.classList.remove("light-mode");
+    };
+
+    document.querySelector("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("loader-overlay").style.display = "flex";
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        this.submit();
+      }, 3000); // Adjust delay if needed
+    });
+  </script>
+</body>
+</html>
