@@ -5,3 +5,4 @@ joblib
 pandas
 matplotlib
 seaborn
+gunicorn==20.1.0
